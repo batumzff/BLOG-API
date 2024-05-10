@@ -9,7 +9,8 @@ const NewBlog = () => {
     title:"",
     content: "",
     image: "",
-    categories: "",
+    // categories: "",
+    categoryId: "",
     isPublish: ""
   })
   console.log("categories", categories);
@@ -28,6 +29,14 @@ const NewBlog = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
   await postBlog("blogs",inputs)
+  setInputs({
+    title:"",
+    content: "",
+    image: "",
+    // categories: "",
+    categoryId: "",
+    isPublish: ""
+  })
     };
  
     const postBlog = async (url, postData) => {
@@ -35,7 +44,8 @@ const NewBlog = () => {
         const { data } = await axiosWithToken.post(`${url}/`, postData);
         console.log(data);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
+        console.error("POST request error:", error.response || error.message);
       }
     }
   
@@ -77,9 +87,9 @@ const NewBlog = () => {
             </div>
             <div>
             <select 
-            name="categories" 
+            name="categoryId" 
             id="categories" 
-            value={inputs.categories} 
+            value={inputs.categoryId} 
             style={{width:"100px"}}
             onChange={handleForm}
             >
