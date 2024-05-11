@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import useAxios from "../Custom-hooks/useAxios";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const NewBlog = () => {
   const { categories } = useSelector(state => state.blog)
@@ -67,13 +69,7 @@ const NewBlog = () => {
             </div>
             <div>
               <label htmlFor="content">Content</label>
-              <input 
-              type="text" 
-              id="content" 
-              name="content" 
-              value={inputs.content}
-              onChange={handleForm}
-              />
+              <ReactQuill theme="snow" value={inputs.content} onChange={handleForm} />
             </div>
             <div>
               <label htmlFor="image">Image Url</label>

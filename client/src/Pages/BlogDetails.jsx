@@ -41,11 +41,7 @@ const BlogDetails = () => {
     
     
     
-  useEffect(() => {
-    
-    
-   
-  }, [])
+  
   
   
   
