@@ -52,6 +52,7 @@ body{
     transition: 300ms ease-in-out;
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center center;
   }
   .card__background--layer {
     z-index: 0;
@@ -93,6 +94,7 @@ body{
 }
 
 a.icon-link {
+  margin-left: 10px;
   color: $text-color;
   transition: 200ms ease-in-out;
   i {
@@ -144,7 +146,8 @@ a.icon-link {
 
 .blog-info {
   display: flex;
-  align-items: center; /* Align items vertically center */
+  align-items: center;
+  gap:10px; /* Align items vertically center */
 }
 
 .blog-info .icon-link {
@@ -166,4 +169,38 @@ a.icon-link {
 .blog-info .icon-link div:first-child {
   margin-left: 10px;
   margin-right: 20px; /* Adjust margin between icon and first div */
+}
+
+.clamped-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 3; /* Number of lines to display */
+}
+
+.author{
+  margin-right: 15px;
+}
+
+.profile-photo {
+  width: 50px;
+  border-radius: 50%;
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.blog-details {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.heart{
+  cursor: pointer;
 }

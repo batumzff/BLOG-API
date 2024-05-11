@@ -35,6 +35,7 @@ module.exports = {
           res.status(201).send({
             error: false,
             message: "Blog liked successfully",
+            
           });
         } else {
           await Blog.updateOne(
@@ -47,7 +48,33 @@ module.exports = {
           res.status(201).send({
             error: false,
             message: "Blog disliked successfully",
+            
           });
         }
       },
+
+      getLikeInfo: async (req, res) => {
+        const base = req.baseUrl
+    
+        const par = base.split("blogs/")
+        // console.log("par", par);
+        
+              const userId = req.body.userId = req.user._id
+              // console.log(userId);
+              const blogId  = req.body.blogId =par[1]
+              // console.log(blogId)
+     
+               
+  // console.log("blogId" ,blogId);
+           const blog = await Blog.findOne({ _id: blogId })
+           if (!blog) {
+            res.errorStatusCode = 404;
+            throw new Error("Blog not found");
+          }else{
+            res.status(200).send({
+              error: false,
+              like: blog.totalLikes
+            })
+          }
+      }
     };

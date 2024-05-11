@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import blogStyle from "./blog.module.scss";
 import { FaEye } from "react-icons/fa";
+import BlogDetails from "../BlogDetails";
+import { FaRegPenToSquare } from "react-icons/fa6";
 
 const Blogs = () => {
   const { getAllBlogData } = useBlogData();
@@ -15,6 +17,7 @@ const Blogs = () => {
   console.log(blogs);
 
   return (
+    
     <>
       {blogs.map((blog) => (
         <div className={`${blogStyle.container} mt-5`}>
@@ -26,6 +29,7 @@ const Blogs = () => {
                     <div
                       className={blogStyle["card__background--main"]}
                       style={{
+                    
                         backgroundImage: `url(${blog?.image})`,
                       }}
                     >
@@ -40,23 +44,23 @@ const Blogs = () => {
                 </div>
                 <div className={blogStyle["blog-card__info"]}>
                   <div className={blogStyle["blog-info"]}>
-                    {/* <a href="#" className="icon-link mr-3">
-                      <i className="fa fa-pencil-square-o" /> Tony Jahson
-                    </a> */}
-                    <a href="#" className={blogStyle["icon-link"]}>
-                      <i className="fa fa-comments-o" />
-                      <FaEye />
+                  <FaRegPenToSquare style={{color:'#ffb535' }}/>
+                    
+                    <h4 className="author">{blog?.userId.username}</h4>
+                    <Link to="#" className={blogStyle["icon-link"]}>
+                      
+                      <FaEye style={{ color: '#ffb535' }} />
                       <div>{blog?.countOfViews}</div>
                       <div>
                         {blog?.createdAt
                           ? new Date(blog.createdAt).toLocaleString()
                           : ""}
                       </div>
-                    </a>
+                    </Link>
                   </div>
-                  <div>{blog?.content}</div>
+                  <div className={blogStyle["clamped-text"]}>{blog?.content}</div>
                   <Link
-                    to={`blog-details/${blog.blogId}`} // Assuming blogId is the unique identifier for each blog
+                    to={`/blog-details/${blog._id}`} // Assuming blogId is the unique identifier for each blog
                     className={`${blogStyle.btn} ${blogStyle["btn--with-icon"]}`}
                   >
                     <i
@@ -70,8 +74,9 @@ const Blogs = () => {
           </div>
         </div>
       ))}
+      
     </>
   );
 };
 
-export default Blogs;
+export default Blogs ;
