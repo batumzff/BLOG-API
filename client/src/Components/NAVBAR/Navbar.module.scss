@@ -1,6 +1,7 @@
 header {
-  background-color: #ffb535;
-  color: #ffffff;
+  background-color: #DBD8E3;
+  color: #fd7014;
+  
   & nav {
     display: flex;
     justify-content: space-between;
@@ -16,12 +17,12 @@ header {
       }
     }
 
-    & main a {
+    & .links a {
       margin-right: 1.5rem;
       text-decoration: none;
       position: relative;
       display: inline-block;
-      color: #000000;
+      color: #E41F7B;
       &::after {
         content: "";
         position: absolute;
@@ -32,7 +33,7 @@ header {
         bottom: 0;
         transform-origin: bottom right;
         transition: transform 0.25s ease-out;
-        background-color: rgb(1, 1, 1);
+        background-color: blueviolet;
       }
       &:hover::after {
         transform: scaleX(1);

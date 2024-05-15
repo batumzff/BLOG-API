@@ -3,6 +3,14 @@
 const Blog = require("../models/blog")
 const User = require("../models/user")
 
+const createDOMPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
+
+const window = new JSDOM('').window;
+const DOMPurify = createDOMPurify(window);
+
+
+
 module.exports = {
     list: async (req, res) => {
 
@@ -20,7 +28,12 @@ module.exports = {
     */
        
         // const data = await Blog.find()
-        const data = await res.getModelList(Blog, {},["userId","categoryId"])
+        // const data = await res.getModelList(Blog, {},["userId","categoryId"])
+        const data = await res.getModelList(Blog, {},[
+            {path:"userId",
+            select:["username","image"]
+            },{path:"categoryId"}])
+
 
         res.status(200).send({
             error: false,
@@ -44,10 +57,13 @@ module.exports = {
     */
 
          req.body.userId = req.user._id
-        //  req.body.categoryId = req.body.categories
-         console.log(req.body.userId);
-         console.log(req.body);
-        const data = await Blog.create(req.body)
+         req.body.categoryId = req.body.categories
+         const { content } = req.body
+
+         
+         const sanitizedContent = DOMPurify.sanitize(content);
+        
+        const data = await Blog.create({...req.body, content:sanitizedContent})
         
         res.status(201).send({
             error: false,
@@ -63,9 +79,29 @@ module.exports = {
         #swagger.summary = "Get Single Blog"
     */
 
+
+        const userId = req.user?._id
+
         const data = await Blog.findOne({ _id: req.params.blogId })
-        data.countOfViews++
-        await data.save()
+            .populate({
+                path: 'userId',
+                select: ['username', 'image']
+            })
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'userId',
+                    select: ['username', 'image']
+                }
+            });
+        if(!data){
+            throw new Error("There is no such a blog, it is removed sorry")
+        }
+
+        if(!data.countOfViews.includes(userId)){
+            data.countOfViews.push(userId) 
+             await data.save()
+        }
 
        console.log("countOfViews",data.countOfViews);
         res.status(202).send({

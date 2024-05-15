@@ -55,8 +55,8 @@ const BlogSchema = new Schema({
     image: [],
 
     countOfViews: {
-        type: Number,
-        default: 0
+        type: Array,
+        default: []
     },
 
 

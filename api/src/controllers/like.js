@@ -4,6 +4,7 @@ const Blog = require("../models/blog")
 
 module.exports = {
     likeStatus: async (req, res) => {
+     
       const base = req.baseUrl
     
       const par = base.split("blogs/")
@@ -35,7 +36,6 @@ module.exports = {
           res.status(201).send({
             error: false,
             message: "Blog liked successfully",
-            
           });
         } else {
           await Blog.updateOne(
@@ -48,7 +48,6 @@ module.exports = {
           res.status(201).send({
             error: false,
             message: "Blog disliked successfully",
-            
           });
         }
       },
@@ -73,7 +72,7 @@ module.exports = {
           }else{
             res.status(200).send({
               error: false,
-              like: blog.totalLikes
+              like: await Blog.findOne({_id: blogId})
             })
           }
       }

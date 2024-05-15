@@ -20,7 +20,7 @@ const Navbar = () => {
           <span>Illuminate Your Thoughts</span>
         </section>
         <section>
-          <main>
+          <main className={NavbarStyle.links}>
             <Link to="/blogs">
               Blogs
             </Link>

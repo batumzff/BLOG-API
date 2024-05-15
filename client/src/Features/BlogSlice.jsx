@@ -5,6 +5,7 @@ const initialState = {
   categories: [],
   blogs: [],
   comments: [],
+  blogDetail: {},
   loading: false,
   error: false,
 };

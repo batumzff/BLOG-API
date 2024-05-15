@@ -1,0 +1,22 @@
+.home-main {
+margin: 8rem;
+ & .container {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 1rem;
+  & .blog-card {
+    height: 10rem;
+  border-radius: 15px;
+  background: #e0e0e0;
+  box-shadow: 34px 34px 76px #c3c3c3, -34px -34px 76px #fdfdfd;
+
+  & img {
+    width: 20rem;
+    object-fit: contain;
+    border-radius: .5rem;
+  }
+}
+ 
+}  
+}
+
