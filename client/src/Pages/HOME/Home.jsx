@@ -3,14 +3,23 @@ import useBlogData from "../../Custom-hooks/useBlogData";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import homeStyle from "./Home.module.scss"
+import useAxios from "../../Custom-hooks/useAxios";
 
 const Home = () => {
   const { getData } = useBlogData();
   const { blogs } = useSelector((state) => state.blog);
+  const {axiosWithToken}=useAxios()
 
   useEffect(() => {
     getData();
   }, []);
+  const a = async()=>{
+    const deneme = await axiosWithToken("blogs")
+    console.log(deneme.data.data)
+  }
+useEffect(() => {
+  a()
+}, [])
 
   return (
     <main className={homeStyle["home-main"]}>
