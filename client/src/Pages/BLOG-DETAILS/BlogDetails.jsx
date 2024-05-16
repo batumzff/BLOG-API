@@ -16,7 +16,7 @@ const BlogDetails = () => {
   const { blogDetail } = useSelector((state) => state.blog);
   const { user } = useSelector((state) => state.auth);
   const [likeStatus, setLikeStatus] = useState("");
-  const { getLike, getDetailPage, getComment } = useBlogData();
+  const { getLike, getDetailPage, postComment} = useBlogData();
   const { blogId } = useParams();
   const { axiosWithToken } = useAxios();
   const [show, setShow] = useState(false);
@@ -47,11 +47,12 @@ const BlogDetails = () => {
     const sanitizedContent = DOMPurify.sanitize(comment);
     const content = sanitizedContent.replace(/<[^>]*>/g, "");
     try {
-      const data = await axiosWithToken.post("comments", {
-        // userId: user.userId,
-        content,
-        blogId,
-      })
+      // const data = await axiosWithToken.post("comments", {
+      //   // userId: user.userId,
+      //   content,
+      //   blogId,
+      // })
+      postComment("comments",content,blogId)
       // console.log("comment-data",data);
     } catch (error) {
       console.log(error);
@@ -60,10 +61,10 @@ const BlogDetails = () => {
   // const deneme = comments?.map(comment=>comment?.content)
   // console.log(deneme)
 
-  useEffect(() => {
-   getComment("comments",blogId)
+  // useEffect(() => {
+  //  getComment("comments",blogId)
    
-  }, [comment])
+  // }, [comment])
   
   // console.log(token);
 // console.log(blogDetail?.countOfViews);

@@ -78,11 +78,27 @@ const useBlogData = () => {
     }
  }
 
+ const postComment = async(url,commentData,blogId)=> {
+  // console.log("postComment",url)
+  // console.log(commentData)
+  dispatch(fetchStart());
+  try {
+    const {data} = await axiosWithToken.post(`${url}`,{content:commentData,blogId})
+    // console.log(data)
+    
+    getComment("blogDetail",blogId)
+    
+  } catch (error) {
+    dispatch(fetchFail());
+    console.log(error);
+  }
+ }
+
  const getComment = async (url, blogId) => {
   dispatch(fetchStart());
   try {
     const { data } = await axiosWithToken.get(`blogs/${blogId}`);
-    console.log("comment-data in getComment",data);
+    // console.log("comment-data in getComment",data);
     dispatch(getSingleData({ data, url }));
   } catch (error) {
     dispatch(fetchFail());
@@ -90,7 +106,9 @@ const useBlogData = () => {
   }
  }
 
-  return { getAllBlogData, getData, getLike, getDetailPage, getComment };
+ 
+
+  return { getAllBlogData, getData, getLike, getDetailPage, getComment, postComment };
 };
 
 export default useBlogData;

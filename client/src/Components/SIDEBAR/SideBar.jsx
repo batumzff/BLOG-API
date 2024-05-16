@@ -5,10 +5,11 @@ import { useSelector } from "react-redux";
 import SideStyle from "./SideBar.module.scss"
 
 const navigation = [
+  { name: "Login", to: "/login" },
+  { name: "My Profile", to: "/my-profile" },
   { name: "Blogs", to: "/blogs" },
   { name: "NewBlog", to: "/new-blog" },
   { name: "About", to: "/about" },
-  { name: "Login", to: "/login" },
   { name: "Register", to: "/register" },
 ];
 

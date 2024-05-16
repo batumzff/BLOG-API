@@ -11,6 +11,7 @@ const Navbar = () => {
   const { user, token } = useSelector((state) => state.auth);
   const { logout, login } = useAuthCalls();
   const [sidebar, setSidebar] = useState(false);
+  // console.log(user)
 
   return (
     <header>
@@ -38,7 +39,7 @@ const Navbar = () => {
         </section>
         <section className={NavbarStyle.avatar}>
           <div onClick={() => setSidebar((prev) => !prev)}>
-            <Avatar size="50" src="" round=".8rem" />
+            <Avatar size="50" src={user?.image[0] || "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"} round=".8rem" />
           </div>
 
 {/*         
