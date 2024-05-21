@@ -25,9 +25,8 @@ const Register = () => {
   const [biography, setBiography] = useState("");
 
   const onSubmit = (data) => {
-    const info = { ...data, biography };
-    console.log("submit data", info);
-    dispatch(registerUser(info));
+    // console.log("submit data", info);
+    dispatch(registerUser(data));
   };
 
   useEffect(() => {
@@ -127,4 +126,3 @@ const Register = () => {
 };
 
 export default Register;
-
