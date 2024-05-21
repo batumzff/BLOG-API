@@ -4,7 +4,7 @@ import Home from "../Pages/HOME/Home";
 import Categories from "../Components/CATEGORIES/Categories";
 import Blogs from "../Pages/BLOG/Blogs";
 // const Blogs = lazy(()=> import("../Pages/BLOG/Blogs"))
-const Register = lazy(() => import("../Pages/Register"));
+const Register = lazy(() => import("../Pages/REGISTER/Register"));
 const Login = lazy(() => import("../Pages/LOGIN/Login"));
 const Contact = lazy(() => import("../Pages/Contact"));
 const About = lazy(() => import("../Pages/About"));

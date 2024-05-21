@@ -63,7 +63,12 @@ const BlogSchema = new Schema({
     isPublish: {
         type: Boolean,
         default: true
-    }
+    },
+
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
   
    
 }, {
