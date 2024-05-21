@@ -4,30 +4,25 @@ import { useParams } from "react-router-dom";
 import useBlogData from "../../Custom-hooks/useBlogData";
 import { LiaHeart } from "react-icons/lia";
 import { FaTrashAlt } from "react-icons/fa";
-import detailStyle from "./BlogDetails.module.scss";
 import useAxios from "../../Custom-hooks/useAxios";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import DOMPurify from "dompurify";
 import { VscEdit } from "react-icons/vsc";
 import BlogModal from "../../Components/BLOG-MODAL/BlogModal";
+import detailStyle from "./BlogDetails.module.scss";
 
 const BlogDetails = () => {
   const { blogDetail } = useSelector((state) => state.blog);
   const { user } = useSelector((state) => state.auth);
   const [likeStatus, setLikeStatus] = useState("");
-  const { getLike, getDetailPage, postComment} = useBlogData();
+  const { getLike, getDetailPage, postComment, getData} = useBlogData();
   const { blogId } = useParams();
   const { axiosWithToken } = useAxios();
   const [show, setShow] = useState(false);
   const [comment, setComment] = useState("");
   const [editBlogModal, setEditBlogModal] = useState(false);
 
-  
- 
-  
-  // console.log(blogDetail);
-  // console.log("comments",comments)
   useEffect(() => {
     getDetailPage("blogDetail", blogId);
     getLike("blogs", blogId);
@@ -44,75 +39,62 @@ const BlogDetails = () => {
   };
 
   const handleComment = async () => {
+
     const sanitizedContent = DOMPurify.sanitize(comment);
     const content = sanitizedContent.replace(/<[^>]*>/g, "");
-    try {
-      // const data = await axiosWithToken.post("comments", {
-      //   // userId: user.userId,
-      //   content,
-      //   blogId,
-      // })
-      postComment("comments",content,blogId)
-      // console.log("comment-data",data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  // const deneme = comments?.map(comment=>comment?.content)
-  // console.log(deneme)
+    await  postComment("comments",content,blogId)
 
-  // useEffect(() => {
-  //  getComment("comments",blogId)
-   
-  // }, [comment])
-  
-  // console.log(token);
-// console.log(blogDetail?.countOfViews);
+  }
+
+  const handleDelete = async () => {
+    const data = await axiosWithToken.delete(`blogs/${blogDetail?._id}`)
+    console.log(data);
+   const result= await getData("blogs")
+   console.log(result);
+  }
   let visitorCount = blogDetail?.countOfViews?.length;
   visitorCount = visitorCount == 0 ? 1 : visitorCount;
-  // console.log(show);
-  // console.log(likes)
-
-  const categoryId = blogDetail?.categoryId
-  // console.log(categoryId)
   
+  const categoryId = blogDetail?.categoryId
   
   console.log(blogDetail)
-
-  
+console.log(user);
+  // console.log(blogDetail?.userId?.isActive == true);
+  console.log(( blogDetail?.userId?._id == user?.id  ) ? "a": "no");
+  console.log( (blogDetail?.userId?.isAdmin === true || blogDetail?.userId?.isStaff === true)   ? "a": "no"); 
  
   return (
-    <main>
+    <main className={detailStyle.main}>
       <section>
         <div className={detailStyle["detail-header"]}>
           <h2>{blogDetail?.title}</h2>
-          <div>
+          
             <img src={blogDetail?.image} alt="blog-image" />
-            <div>
+            <div className={detailStyle.likes}>
               <LiaHeart
                 onClick={postLike}
                 fill={`${blogDetail?.likes?.includes(user?.id) ? "red" : ""}`}
               />
-            </div>
             <span>{blogDetail?.totalLikes}</span>
+            </div>
             {
               visitorCount && (
-              <h4>
+              <div className={detailStyle.views}>
                 viewed by <span>{visitorCount} </span>
                 <span>
                   {visitorCount > 1 ? "people" : "person"}
                 </span>
-              </h4>)
+              </div>)
             }
             
-            {blogDetail?.userId?._id == user?.id && (
+            {(blogDetail?.userId?._id == user?.id || (user?.isAdmin == true || user?.isStaff == true)) && (
               <span className={detailStyle.modal}>
-                {/* <FaTrashAlt /> */}
+                <FaTrashAlt onClick={handleDelete}/>
                 <VscEdit onClick={()=>setEditBlogModal(!editBlogModal)}/>
               </span>
             )}
-            <p>{blogDetail?.content}</p>
-          </div>
+            <p className={detailStyle.content}>{blogDetail?.content}</p>
+          
         </div>
         <button onClick={() => setShow((prev) => !prev)}>Show comments</button>
         {show && (
@@ -134,18 +116,19 @@ const BlogDetails = () => {
             )}
           </div>
         )}
-        { show && <div>
+        { show && 
           <ReactQuill
-                  // className={newBlogStyle.quill}
+          className={detailStyle.quill}
                   theme="snow"
                   value={comment}
                   onChange={setComment}
                 />
-                <button onClick={handleComment}>Add Your Comment</button>
-        </div> }
+               
+         }
+         { show &&  <button onClick={handleComment}>Add Your Comment</button>}
       </section>
       {
-        editBlogModal && <BlogModal {...blogDetail} blogId={blogId} categoryId={categoryId} />
+        editBlogModal && <BlogModal {...blogDetail} blogId={blogId} categoryId={categoryId} onClose={setEditBlogModal} />
       }
       
     </main>
@@ -154,124 +137,3 @@ const BlogDetails = () => {
 
 
 export default BlogDetails;
-
-// import React, { useEffect, useState } from "react";
-// import { useSelector } from "react-redux";
-// import { useParams } from "react-router-dom";
-// import useBlogData from "../../Custom-hooks/useBlogData";
-// import { LiaHeart } from "react-icons/lia";
-// import { FaTrashAlt } from "react-icons/fa";
-// import detailStyle from "./BlogDetails.module.scss";
-// import useAxios from "../../Custom-hooks/useAxios";
-// import ReactQuill from "react-quill";
-// import "react-quill/dist/quill.snow.css";
-// import DOMPurify from "dompurify";
-
-// const BlogDetails = () => {
-//   const { blogDetail, comments:{ comments} } = useSelector((state) => state.blog);
-//   const { user, token } = useSelector((state) => state.auth);
-//   const [likeStatus, setLikeStatus] = useState("");
-//   const { getLike, getDetailPage, getComment } = useBlogData();
-//   const { blogId } = useParams();
-//   const { axiosWithToken } = useAxios();
-//   const [show, setShow] = useState(false);
-//   const [comment, setComment] = useState("");
-
-
-//   ;
-//   console.log(blogDetail);
-//   console.log(comments);
-//   const a = comments?.map(comment => comment.content)
-//   console.log(a);
-//   useEffect(() => {
-//     getDetailPage("blogDetail", blogId);
-//     getLike("blogs", blogId);
-//   }, [likeStatus]);
-//   // console.log(blogId);
-//   const postLike = async () => {
-//     try {
-//       const data = await axiosWithToken.post(`blogs/${blogId}/postLike`);
-//       console.log(data);
-//       setLikeStatus(data);
-//     } catch (error) {
-//       console.log("postLike error", error);
-//     }
-//   };
-
-//   const handleComment = async () => {
-//     const sanitizedContent = DOMPurify.sanitize(comment);
-//     const content = sanitizedContent.replace(/<[^>]*>/g, "");
-//     try {
-//       const data = await axiosWithToken.post("comments", {content, blogId})
-//       // console.log("comment-data",data);
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   }
-
-//   useEffect(() => {
-//    getComment("comments",blogId)
-//   }, [comment])
-//   console.log(token);
-// console.log(blogDetail?.countOfViews);
-//   let visitorCount = blogDetail?.countOfViews?.length;
-//   visitorCount = visitorCount == 0 ? 1 : visitorCount;
-//   console.log(show);
-//   // console.log(likes)
-//   return (
-//     <main>
-//       <section>
-//         <div className={detailStyle["detail-header"]}>
-//           <h2>{blogDetail?.title}</h2>
-//           <div>
-//             <img src={blogDetail?.image} alt="blog-image" />
-//             <div>
-//               <LiaHeart
-//                 onClick={postLike}
-//                 fill={`${blogDetail?.likes?.includes(user?.id) ? "red" : ""}`}
-//               />
-//             </div>
-//             <span>{blogDetail?.totalLikes}</span>
-//             <h4>
-//               viewed by <span>{visitorCount} </span>
-//               <span>
-//                 {visitorCount > 1 ? "people" : "person"}
-//               </span>
-//             </h4>
-//             {blogDetail?.userId == user?.id && (
-//               <span>
-//                 <FaTrashAlt />
-//               </span>
-//             )}
-//             <p>{blogDetail?.content}</p>
-//           </div>
-//         </div>
-//         <button onClick={() => setShow((prev) => !prev)}>Show comments</button>
-//         {show && (
-//           <div className={detailStyle.comment}>
-//             {blogDetail?.comments?.length > 0 ? (
-//               blogDetail?.comments?.map((comment) => (
-//                 <span key={comment?._id}>{comment?.content}</span>
-//               ))
-//             ) : (
-//               <div>
-//                 <h4>Add first comment</h4>
-//               </div>
-//             )}
-//           </div>
-//         )}
-//         { show && <div>
-//           <ReactQuill
-//                   // className={newBlogStyle.quill}
-//                   theme="snow"
-//                   value={comment}
-//                   onChange={setComment}
-//                 />
-//                 <button onClick={handleComment}>Add Your Comment</button>
-//         </div> }
-//       </section>
-//     </main>
-//   );
-// };
-
-// export default BlogDetails;

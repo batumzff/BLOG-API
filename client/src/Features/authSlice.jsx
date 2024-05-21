@@ -52,7 +52,7 @@ const AuthSlice = createSlice({
         lastName: payload.user.lastName,
         email: payload.user.email,
         image: payload.user.image,
-        bio: payload.user.bio || "",
+        biography: payload.user.biography || "",
         id: payload.user._id
       };
 

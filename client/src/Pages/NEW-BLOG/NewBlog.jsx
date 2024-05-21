@@ -6,6 +6,9 @@ import useAxios from "../../Custom-hooks/useAxios";
 import newBlogStyle from "./NewBlog.module.scss";
 import useBlogData from "../../Custom-hooks/useBlogData";
 import DOMPurify from "dompurify";
+import { useNavigate } from "react-router-dom";
+import { modules } from "../../Helpers/quillModules";
+
 
 const NewBlog = () => {
   const { categories } = useSelector((state) => state.blog);
@@ -19,6 +22,8 @@ const NewBlog = () => {
   });
   const [text, setText] = useState("");
   // console.log("categories", categories);
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     getData("categories");
@@ -38,11 +43,15 @@ const NewBlog = () => {
   };
   console.log(inputs);
 
+
+  console.log(text);
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     await postBlog("blogs", inputs);
     setInputs({ title: "", image: "", categories: "", isPublish: "" });
     setText("");
+    navigate("/blogs")
   };
 
   const postBlog = async (url, postData) => {
@@ -55,8 +64,8 @@ const NewBlog = () => {
   };
 
   return (
-    <section>
-      <main>
+    <section className={newBlogStyle["new-blog-main"]}>
+      <main className={newBlogStyle["form-container"]}>
         <section>
           <form onSubmit={handleSubmit}>
             <div className={newBlogStyle["input-group"]}>
@@ -76,6 +85,7 @@ const NewBlog = () => {
                 theme="snow"
                 value={text}
                 onChange={setText}
+                modules={modules}
               />
             </div>
             <div className={newBlogStyle["input-group"]}>
