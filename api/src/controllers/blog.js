@@ -131,33 +131,74 @@ module.exports = {
         })
     },
 
-    delete: async (req, res) => {
+    // delete: async (req, res) => {
       
 
-          /*
-        #swagger.tags = ["Blogs"]
-        #swagger.summary = "Delete Blog"
-    */
+    //       /*
+    //     #swagger.tags = ["Blogs"]
+    //     #swagger.summary = "Delete Blog"
+    // */
 
-        // const { deletedCount } = await Blog.deleteOne({ _id: req.params.blogId })
-        const blogs = await Blog.findOne({userId: req.user?._id})
+    //     // const { deletedCount } = await Blog.deleteOne({ _id: req.params.blogId })
+    //     const blogs = await Blog.findOne({userId: req.user?._id})
 
-        if(!(req.user?.isAdmin || req.user?.isStaff) || req.user?._id !== blogs?.userId){
-           res.status(403).send({
-            message: "You are not the owner of the blog to do this operation"
-           })
+    //     if(!(req.user?.isAdmin || req.user?.isStaff) || req.user?._id !== blogs?.userId){
+    //        res.status(403).send({
+    //         message: "You are not the owner of the blog to do this operation"
+    //        })
+    //     }
+    //      if(req.user?.isAdmin || req.user?.isStaff) {
+    //         const { deletedCount } = await Blog.deleteOne({ _id: req.params.blogId })
+    //         res.status(deletedCount ? 204 : 404).send({
+    //             message:"Blog deleted by the authorized person permanently"
+    //         })
+    //      }
+    //      const deletedBlog = await Blog.updateOne({ _id: req.params.blogId },{isDeleted: true})
+
+    //     res.status(deletedBlog ? 204 : 404).send({
+    //         // error: !(!!deletedBlog)
+    //         message: "Deleted successfully"
+    //     })
+    // },
+
+    delete: async (req, res) => {
+        /*
+          #swagger.tags = ["Blogs"]
+          #swagger.summary = "Delete Blog"
+        */
+    
+        try {
+            const blogs = await Blog.findOne({ userId: req.user?._id }).populate("userId");
+    
+            if (!blogs) {
+                 res.status(404).send({
+                    message: "Blog not found"
+                });
+            }
+    
+            if (!(req.user?.isAdmin || req.user?.isStaff) || req.user?._id !== blogs.userId) {
+                 res.status(403).send({
+                    message: "You are not the owner of the blog to do this operation"
+                });
+            }
+    
+            if (req.user?.isAdmin || req.user?.isStaff) {
+                const { deletedCount } = await Blog.deleteOne({ _id: req.params.blogId });
+                 res.status(deletedCount ? 204 : 404).send({
+                    message: deletedCount ? "Blog deleted by the authorized person permanently" : "Blog not found"
+                });
+            } else {
+                const updatedBlog = await Blog.updateOne({ _id: req.params.blogId }, { isDeleted: true });
+                 res.status(updatedBlog.nModified ? 204 : 404).send({
+                    message: updatedBlog.nModified ? "Deleted successfully" : "Blog not found"
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).send({
+                message: "An error occurred while deleting the blog"
+            });
         }
-         if(req.user?.isAdmin || req.user?.isStaff) {
-            const { deletedCount } = await Blog.deleteOne({ _id: req.params.blogId })
-            res.status(deletedCount ? 204 : 404).send({
-                message:"Blog deleted by the authorized person permanently"
-            })
-         }
-         const deletedBlog = await Blog.updateOne({ _id: req.params.blogId },{isDeleted: true})
-
-        res.status(deletedBlog ? 204 : 404).send({
-            // error: !(!!deletedBlog)
-            message: "Deleted successfully"
-        })
     },
+    
 }

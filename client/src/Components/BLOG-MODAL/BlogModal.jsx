@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import modalBlogStyle from "./BlogModal.module.scss";
 import ReactQuill from "react-quill";
+import { modules } from "../../Helpers/quillModules";
 import { useSelector } from "react-redux";
 import DOMPurify from "dompurify";
 import useBlogData from "../../Custom-hooks/useBlogData";
 import useAxios from "../../Custom-hooks/useAxios";
 import { useNavigate } from "react-router-dom";
+import BlogPost from "../BLOG-POST/BlogPost";
 
 const BlogModal = ({
   title,
@@ -38,8 +40,9 @@ const BlogModal = ({
 
   const handleForm = (e) => {
     const { name, value } = e.target;
-    const sanitizedContent = DOMPurify.sanitize(text);
-    const content = sanitizedContent.replace(/<[^>]*>/g, "");
+    const sanitizedContent = DOMPurify.sanitize(text, { USE_PROFILES: { html: true } });
+    // const content = sanitizedContent.replace(/<[^>]*>/g, "");
+    const content = sanitizedContent
     console.log(content);
 
     setInputs({
@@ -96,6 +99,7 @@ const BlogModal = ({
                 theme="snow"
                 value={text}
                 onChange={setText}
+                modules={modules}
               />
             </div>
             <div className={modalBlogStyle["input-group"]}>

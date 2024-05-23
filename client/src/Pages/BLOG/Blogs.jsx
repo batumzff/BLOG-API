@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import blogStyle from "./Blog.module.scss";
 import { FaEye } from "react-icons/fa";
 import { FaRegPenToSquare } from "react-icons/fa6";
+import BlogPost from "../../Components/BLOG-POST/BlogPost";
 
 const Blogs = () => {
   const { getAllBlogData } = useBlogData();
@@ -59,7 +60,8 @@ const Blogs = () => {
                       </div>
                     </Link>
                   </div>
-                  <div className={blogStyle["clamped-text"]}>{blog?.content}</div>
+                  {/* <div className={blogStyle["clamped-text"]}>{blog?.content}</div> */}
+                  <BlogPost content={blog?.content} />
                   <Link
                     to={`/blog-details/${blog._id}`} // Assuming blogId is the unique identifier for each blog
                     className={`${blogStyle.btn} ${blogStyle["btn--with-icon"]}`}

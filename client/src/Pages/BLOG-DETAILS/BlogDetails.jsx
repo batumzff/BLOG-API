@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useBlogData from "../../Custom-hooks/useBlogData";
 import { LiaHeart } from "react-icons/lia";
 import { FaTrashAlt } from "react-icons/fa";
@@ -11,6 +11,7 @@ import DOMPurify from "dompurify";
 import { VscEdit } from "react-icons/vsc";
 import BlogModal from "../../Components/BLOG-MODAL/BlogModal";
 import detailStyle from "./BlogDetails.module.scss";
+import BlogPost from "../../Components/BLOG-POST/BlogPost";
 
 const BlogDetails = () => {
   const { blogDetail } = useSelector((state) => state.blog);
@@ -22,6 +23,7 @@ const BlogDetails = () => {
   const [show, setShow] = useState(false);
   const [comment, setComment] = useState("");
   const [editBlogModal, setEditBlogModal] = useState(false);
+  const navigate = useNavigate()
 
   useEffect(() => {
     getDetailPage("blogDetail", blogId);
@@ -40,8 +42,9 @@ const BlogDetails = () => {
 
   const handleComment = async () => {
 
-    const sanitizedContent = DOMPurify.sanitize(comment);
-    const content = sanitizedContent.replace(/<[^>]*>/g, "");
+    const sanitizedContent = DOMPurify.sanitize(comment, { USE_PROFILES: { html: true } });
+    // const content = sanitizedContent.replace(/<[^>]*>/g, "");
+    const content = sanitizedContent
     await  postComment("comments",content,blogId)
 
   }
@@ -49,19 +52,15 @@ const BlogDetails = () => {
   const handleDelete = async () => {
     const data = await axiosWithToken.delete(`blogs/${blogDetail?._id}`)
     console.log(data);
-   const result= await getData("blogs")
-   console.log(result);
+  //  const result= await getData("blogs")
+  //  console.log(result);
+  navigate("/blogs")
   }
   let visitorCount = blogDetail?.countOfViews?.length;
   visitorCount = visitorCount == 0 ? 1 : visitorCount;
   
   const categoryId = blogDetail?.categoryId
   
-  console.log(blogDetail)
-console.log(user);
-  // console.log(blogDetail?.userId?.isActive == true);
-  console.log(( blogDetail?.userId?._id == user?.id  ) ? "a": "no");
-  console.log( (blogDetail?.userId?.isAdmin === true || blogDetail?.userId?.isStaff === true)   ? "a": "no"); 
  
   return (
     <main className={detailStyle.main}>
@@ -93,8 +92,8 @@ console.log(user);
                 <VscEdit onClick={()=>setEditBlogModal(!editBlogModal)}/>
               </span>
             )}
-            <p className={detailStyle.content}>{blogDetail?.content}</p>
-          
+            {/* <p className={detailStyle.content}>{blogDetail?.content}</p> */}
+            <BlogPost content={blogDetail?.content} />
         </div>
         <button onClick={() => setShow((prev) => !prev)}>Show comments</button>
         {show && (
@@ -102,10 +101,10 @@ console.log(user);
             {/* <h4>{comments?.userId.username}</h4> */}
             {blogDetail?.comments?.length > 0 ? (
               blogDetail?.comments?.map((comment) => (
-                <div key={comment?._id}>
-                  <div >{comment?.content}</div>
-                </div>
-                
+                // <div key={comment?._id}>
+                //   <div >{comment?.content}</div>
+                // </div>
+                <BlogPost content={comment?.content} />
               ))
             ) : (
               <div>
