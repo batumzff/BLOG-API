@@ -49,13 +49,15 @@ const BlogDetails = () => {
 
   }
 
-  const handleDelete = async () => {
-    const data = await axiosWithToken.delete(`blogs/${blogDetail?._id}`)
+  const handleDelete =  () => {
+    const data =  axiosWithToken.delete(`blogs/${blogDetail?._id}`)
     console.log(data);
   //  const result= await getData("blogs")
   //  console.log(result);
   navigate("/blogs")
   }
+  
+  
   let visitorCount = blogDetail?.countOfViews?.length;
   visitorCount = visitorCount == 0 ? 1 : visitorCount;
   

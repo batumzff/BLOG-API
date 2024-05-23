@@ -22,7 +22,7 @@ const Blogs = () => {
     
     <>
       {blogs?.map((blog) => (
-        <div className={`${blogStyle.container} mt-5`}>
+        <div key={blog?._id} className={`${blogStyle.container} mt-5`}>
           <div className={blogStyle.row}>
             <div className="col-12">
               <article className={blogStyle["blog-card"]}>
